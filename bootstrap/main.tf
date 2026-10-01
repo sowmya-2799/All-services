@@ -51,6 +51,70 @@ module "compute_engine" {
   depends_on = [google_project_service.required]
 }
 
+module "instance_group" {
+  source = "../modules/instance-group"
+
+  project_id                    = var.project_id
+  region                        = var.region
+  name                          = var.instance_group_name
+  instance_base_name            = var.backend_instance_base_name
+  instance_template_name_prefix = var.backend_instance_template_name_prefix
+  machine_type                  = var.machine_type
+  subnetwork_self_link          = module.vpc.subnetwork_self_link
+  target_size                   = var.instance_group_size
+  backend_port                  = var.backend_port
+  backend_tags                  = var.backend_tags
+  service_account_email         = var.service_account_email
+
+  depends_on = [google_project_service.required]
+}
+
+module "application_load_balancer" {
+  source = "../modules/application-load-balancer"
+
+  project_id           = var.project_id
+  region               = var.region
+  health_check_name    = var.application_health_check_name
+  backend_service_name = var.application_backend_service_name
+  url_map_name         = var.application_url_map_name
+  http_proxy_name      = var.application_http_proxy_name
+  address_name         = var.application_address_name
+  forwarding_rule_name = var.application_forwarding_rule_name
+  firewall_name        = var.application_firewall_name
+  network_self_link    = module.vpc.network_self_link
+  subnetwork_self_link = module.vpc.subnetwork_self_link
+  instance_group       = module.instance_group.instance_group
+  backend_tags         = var.backend_tags
+  backend_port         = var.backend_port
+  frontend_port        = var.application_frontend_port
+  frontend_ip          = var.application_frontend_ip
+  proxy_subnet_name    = var.application_proxy_subnet_name
+  proxy_subnet_cidr    = var.application_proxy_subnet_cidr
+
+  depends_on = [google_project_service.required]
+}
+
+module "network_load_balancer" {
+  source = "../modules/network-load-balancer"
+
+  project_id           = var.project_id
+  region               = var.region
+  health_check_name    = var.network_health_check_name
+  backend_service_name = var.network_backend_service_name
+  address_name         = var.network_address_name
+  forwarding_rule_name = var.network_forwarding_rule_name
+  firewall_name        = var.network_firewall_name
+  network_self_link    = module.vpc.network_self_link
+  subnetwork_self_link = module.vpc.subnetwork_self_link
+  instance_group       = module.instance_group.instance_group
+  backend_tags         = var.backend_tags
+  backend_port         = var.backend_port
+  frontend_port        = var.network_frontend_port
+  frontend_ip          = var.network_frontend_ip
+
+  depends_on = [google_project_service.required]
+}
+
 module "cloud_storage" {
   source = "../modules/cloud-storage"
 

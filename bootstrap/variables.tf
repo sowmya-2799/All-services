@@ -109,3 +109,147 @@ variable "service_account_email" {
   type        = string
   default     = null
 }
+
+variable "instance_group_name" {
+  description = "Name of the regional managed instance group used by both load balancers."
+  type        = string
+  default     = "sample-backend"
+}
+
+variable "backend_instance_base_name" {
+  description = "Base name for backend VM instances; Google Cloud adds unique suffixes to individual instances."
+  type        = string
+  default     = "sample-backend-vm"
+}
+
+variable "backend_instance_template_name_prefix" {
+  description = "Prefix for the backend instance template; Terraform adds a suffix so template revisions can be replaced safely."
+  type        = string
+  default     = "sample-backend-template-"
+}
+
+variable "instance_group_size" {
+  description = "Number of backend instances in the regional managed instance group."
+  type        = number
+  default     = 2
+}
+
+variable "backend_port" {
+  description = "HTTP port served by the managed instance group and used by backend health checks."
+  type        = number
+  default     = 80
+}
+
+variable "backend_tags" {
+  description = "Network tags applied to backend VMs and used by load-balancer firewall rules."
+  type        = list(string)
+  default     = ["sample-backend"]
+}
+
+variable "application_health_check_name" {
+  description = "Name of the regional application load-balancer health check."
+  type        = string
+  default     = "sample-app-health-check"
+}
+
+variable "application_backend_service_name" {
+  description = "Name of the regional application load-balancer backend service."
+  type        = string
+  default     = "sample-app-backend"
+}
+
+variable "application_url_map_name" {
+  description = "Name of the regional application load-balancer URL map."
+  type        = string
+  default     = "sample-app-url-map"
+}
+
+variable "application_http_proxy_name" {
+  description = "Name of the regional application load-balancer HTTP proxy."
+  type        = string
+  default     = "sample-app-http-proxy"
+}
+
+variable "application_address_name" {
+  description = "Name of the reserved internal application load-balancer address."
+  type        = string
+  default     = "sample-app-address"
+}
+
+variable "application_forwarding_rule_name" {
+  description = "Name of the regional application load-balancer forwarding rule."
+  type        = string
+  default     = "sample-app-forwarding-rule"
+}
+
+variable "application_firewall_name" {
+  description = "Name of the firewall rule allowing application LB health checks and proxy traffic."
+  type        = string
+  default     = "sample-app-allow-health-check-and-proxy"
+}
+
+variable "application_frontend_port" {
+  description = "Frontend HTTP port for the internal application load balancer."
+  type        = number
+  default     = 80
+}
+
+variable "application_frontend_ip" {
+  description = "Optional reserved internal IPv4 address for the application load balancer; null allocates one."
+  type        = string
+  default     = null
+}
+
+variable "application_proxy_subnet_name" {
+  description = "Name of the proxy-only subnet required by the regional internal application load balancer."
+  type        = string
+  default     = "sample-proxy-only"
+}
+
+variable "application_proxy_subnet_cidr" {
+  description = "Non-overlapping regional CIDR range for the application load balancer proxy-only subnet."
+  type        = string
+  default     = "10.20.0.0/23"
+}
+
+variable "network_health_check_name" {
+  description = "Name of the regional network load-balancer health check."
+  type        = string
+  default     = "sample-network-health-check"
+}
+
+variable "network_backend_service_name" {
+  description = "Name of the regional network load-balancer backend service."
+  type        = string
+  default     = "sample-network-backend"
+}
+
+variable "network_address_name" {
+  description = "Name of the reserved internal network load-balancer address."
+  type        = string
+  default     = "sample-network-address"
+}
+
+variable "network_forwarding_rule_name" {
+  description = "Name of the regional network load-balancer forwarding rule."
+  type        = string
+  default     = "sample-network-forwarding-rule"
+}
+
+variable "network_firewall_name" {
+  description = "Name of the firewall rule allowing network LB health checks."
+  type        = string
+  default     = "sample-network-allow-health-check"
+}
+
+variable "network_frontend_port" {
+  description = "Frontend TCP port for the internal network load balancer."
+  type        = number
+  default     = 80
+}
+
+variable "network_frontend_ip" {
+  description = "Optional reserved internal IPv4 address for the network load balancer; null allocates one."
+  type        = string
+  default     = null
+}
